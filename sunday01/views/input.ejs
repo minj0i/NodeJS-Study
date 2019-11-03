@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>/views/input.ejs</title>
+</head>
+
+<body>
+    <h2>자동차 정보 입력</h2>
+    <form action="/car/form" method="get">
+        <table>
+            <tr>
+               <th>차이름</th>
+               <td><input text="text" name="name"/></td> 
+            </tr>
+            <tr>
+               <th>가격</th>
+               <td><input text="text" name="price"/></td> 
+            </tr>
+             <tr>
+               <th>회사</th>
+               <td><input text="text" name="company"/></td> 
+            </tr>
+            <tr>
+               <th>연식</th>
+               <td><input text="text" name="year"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" value="저장하기"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+
+</html>

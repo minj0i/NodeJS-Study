@@ -17,10 +17,35 @@ let carList = [
 
 
 router.route('/').get(function(req, res) {
-    res.writeHead(200, {'Content-type':'text/html;charset=utf8'});
-    res.write('<h1>자동차 리스트 받기</h1>');
-    res.write('<a href="/car">CarList</a>');    
-    res.end();
+    let name = "HONG GILDONG";
+    let infoData = {
+        subject: 'English',
+        score: 98,
+        getData: function() {
+            return this.subject+"은 "+this.score+"입니다.";
+        } 
+    };
+    let menuData = [
+        {title: '자동차목록', fileUri:'/car'},
+        {title: '정보입력', fileUri:'/car/input'},
+        {title: 'Google', fileUri:'http://google.com'}
+    ];
+    
+    // name 변수의 내용이 index.ejs 페이지에 표시되도록 하시오.
+//    req.app.render('index', {name:name, data:infoData}, function(err, html) {
+//       if(err) throw err;
+//        res.end(html); 
+//    });
+
+    // index.ejs에서 infoData를 쓸때 body안에 넣어줘야 하는 것
+    // menuData를 불러올때도 넣어져있으면 에러나서 여기다 복붙해놓음
+//    <h2>data: <%=data.subject%></h2>
+//    <h2>data: <%=data.score%></h2>
+//    <h3>fuction: <%=data.getData()%></h3>
+    req.app.render('index', {name:name, menu:menuData}, function(err, html) {
+       if(err) throw err;
+        res.end(html); 
+    });
 });
 
 // car라는 요청이 들어오면 car의 get으로 들어온다
@@ -30,6 +55,30 @@ router.route('/car').get(function(req, res) {
 //        res.end('GET - /car');
         res.end(html);
     });
+});
+
+router.route('/car/input').get(function(req, res) {
+     req.app.render('input', {}, function(err, html) {
+       if(err) throw err;
+        res.end(html);
+    });
+});
+
+router.route('/car/form').get(function(req, res) {
+
+    //get방식은 queryString으로 날아옴
+    var carData = {
+        name: req.query.name,
+        price: req.query.price,
+        company: req.query.company,
+        year: req.query.year,
+    };
+    
+    console.log(carData);
+    
+    carList.push(carData);
+    
+    res.redirect('/car');
 });
 
 
