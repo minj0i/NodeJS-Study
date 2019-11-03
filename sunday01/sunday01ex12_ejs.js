@@ -10,11 +10,11 @@ app.set('port', 3000);
 app.set('views', __dirname+'/views'); // 접두어(views)로 ejf 파일 저장경로를 지정한다.
 app.set('view engine', 'ejs'); // 확장자를 지정해 준다.
 
+let sequence = 1;
 let carList = [
-  {"name":"BMW", "price":3500, "company":"BMW", year:2019},
-  {"name":"Granduer", "price":3600, "company":"HYUNDAI", year:2018}
+  {"_id":sequence++, "name":"BMW", "price":3500, "company":"BMW", year:2019},
+  {"_id":sequence++, "name":"Granduer", "price":3600, "company":"HYUNDAI", year:2018}
 ];
-
 
 router.route('/').get(function(req, res) {
     let name = "HONG GILDONG";
@@ -64,10 +64,23 @@ router.route('/car/input').get(function(req, res) {
     });
 });
 
+//:로 오는건 params
+router.route('/car/detail/:_id').get(function(req, res) {
+    var _id = req.params._id;
+    
+    console.log(_id);
+//     req.app.render('input', {}, function(err, html) {
+//       if(err) throw err;
+//        res.end(html);
+//    });
+    res.end(_id);
+});
+
 router.route('/car/form').get(function(req, res) {
 
     //get방식은 queryString으로 날아옴
     var carData = {
+        _id: sequence++,
         name: req.query.name,
         price: req.query.price,
         company: req.query.company,
