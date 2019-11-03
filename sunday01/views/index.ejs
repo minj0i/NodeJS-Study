@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>/views/index.ejs</title>
+</head>
+<body>
+    <h1><%=name%>의 홈페이지</h1>
+    <hr>
+    <ul>
+    <%
+        for(let data of menu) {
+    %>
+        <li><a href="<%=data.fileUri%>"><%=data.title%></a></li>
+    <%
+        } //end of for
+    %>
+    </ul>
+</body>
+</html>
