@@ -19,6 +19,7 @@
         for(let car of list) {
     %>
         <tr>
+            <td><a href="/car/detail/<%=car._id%>"><%=car.name%></a></td>
             <td><%=car.name%></td>
             <td><%=car.price%></td>
             <td><%=car.company%></td>
