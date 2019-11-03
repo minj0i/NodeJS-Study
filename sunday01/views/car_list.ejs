@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>/views/car_list.ejs</title>
+</head>
+<body>
+    
+    <h1>자동차 목록 페이지</h1>
+    <hr>
+    <table width="100%" border="1">
+        <tr>
+            <th>차이름</th>
+            <th>가격</th>
+            <th>회사</th>
+            <th>연식</th>
+        </tr>
+    <%
+        for(let car of list) {
+    %>
+        <tr>
+            <td><%=car.name%></td>
+            <td><%=car.price%></td>
+            <td><%=car.company%></td>
+            <td><%=car.year%></td>
+        </tr>
+    <%
+        } //end of if
+    %>
+    </table>
+    
+</body>
+</html>
