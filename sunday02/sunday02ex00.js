@@ -28,7 +28,6 @@ router.route('/welcome').get((req, res) => {
     console.log('GET - /');
     req.app.render('intro', {request:req, response:res}, (err, html)=>{
         if(err) throw err;
-        res.writeHead(200, {'Content-type':'text/html;charset=utf8'});
         res.end(html);
     });
 });

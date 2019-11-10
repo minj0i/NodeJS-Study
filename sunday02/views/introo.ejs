@@ -2,12 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>/views/intro2.ejs</title>
+    <title>Document</title>
 </head>
 <body>
-    <h1>gg</h1>
+
     <%
-        response.write('<h2>Good!!</h2>');
+        let user = request.query.user;
+        
+        response.writeHead(200, {'Content-type':'text/html; charset=utf8'});
+        response.write('<h2>Good!! 안녕</h2>');
     %>
+    
+        사용자 이름 : <%=user%>
+        
+        <% include ./index.ejs %>
 </body>
 </html>
+   
+
+  

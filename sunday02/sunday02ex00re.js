@@ -12,13 +12,13 @@ app.set('views', path.join(__dirname, 'views'));
 
 router.route('/').get((req, res)=> {
     console.log('GET - /');
+    
     req.app.render('introo', {request:req, response:res}, (err, html) => {
        if(err) {
             console.log('render 에러 발생-!');
             throw err;
        }
-        res.write(html);
-        res.end();
+        res.end(html);
     });
 });
 

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>/public/home.html</title>
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script>
+        //tempalte 문자열을 쓸 때 주의할 점 : 인터넷 익스플로러에서 ECMA6 지원 안함 => webpack, babel을 이용해 compile시켜줘야함
+        var arr = [];
+        var parseArr = function(target, arr) {
+            if (Array.isArray(arr)) {
+                let htmlTemp = "<table border='1'>";
+                for (let person of arr) {
+                    htmlTemp += `<tr><td>${person.name}</td><td>${person.phone}</td></tr>`;
+                }
+                htmlTemp += "</table>";
+                $(target).html(htmlTemp);
+            } else {
+                document.write('Error: 전달 된 인자는 Array타입이 아닙니다.');
+            }
+        };
+
+        $(document).ready(function() {
+            //get, post, load(=받아서 바로 넣는 것)
+            $.get('/personArray', function(data, status) {
+                console.log(data);
+                console.log(status);
+
+                //문자열 쓸때는 trim
+                if (status.trim() == "success".trim()) {
+                    arr = data;
+                    parseArr('div#page', data);
+                }
+            });
+        });
+        
+        //검색 기능
+        function searchData(txtField) {
+//            var word = $(txtField).val();
+            var word = txtField.value;
+            
+            //console.log(word);
+            var newArr = arr.filter(function(item, index) {
+                return item.name.indexOf(word) != -1;
+            });
+            parseArr('div#page', newArr);
+        }
+    </script>
+</head>
+
+<body>
+    <h1>주소록</h1>
+<!-- 검색하는 것 방법1: 서버에 계속 요청 / 방법2: 안에서 처리-->
+    <input type="text" onkeyUp="searchData(this)"/>
+    <hr>
+    <div id="page">
+
+    </div>
+</body>
+
+</html>
