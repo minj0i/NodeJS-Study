@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>계산기</title>
+</head>
+
+<body>
+
+    <h1>초딩용 계산기</h1>
+    <form>
+        <input type="text" name="a">
+        <select name="oper">
+            <option value="plus">plus</option>
+            <option value="minus">minus</option>
+            <option value="mulit">multi</option>
+            <option value="div">div</option>
+        </select>
+        <input type="text" name="b">
+        <input type="submit" value="결과확인">
+    </form>
+    <hr>
+    <div>
+        결과: <span id="resultArea"></span>
+    </div>
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script>
+        //        var form = document.forms[0];
+        $('form').submit(function() {
+            event.preventDefault();
+
+            var url = "http://localhost:3000/"
+            var oper = $(this.oper).val();
+            var a = $(this.a).val();
+            var b = $(this.b).val();
+//            var a = $(':input[name=a]').val();
+//            var b = $(':input[name=b]').val();
+
+            url = url + oper + '/' + a + '/' + b;
+            console.log(url);
+            
+            $.get(url, (data, status) => {
+                if(status.trim() == 'success'.trim()) {
+                    $('#resultArea').text(data);
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>
