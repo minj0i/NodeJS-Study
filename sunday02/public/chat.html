@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajax를 이용한 채팅 프로그램</title>
+    <style>
+        div#textArea {
+            border: 1px solid red;
+            height: 100px;
+            overflow: scroll;
+        }
+    </style>
+</head>
+<body>
+    <h2>채팅 프로그램</h2>
+    <form method="get">
+        <input type="text" name="sender"><br>
+        <input type="text" name="msg">
+        <input type="submit" value="전송">
+    </form>
+    <div id="textArea">
+        
+    </div>
+    
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script>
+        var size = 0;
+        $(document).ready(function() {
+            $('form').submit(function() {
+                event.preventDefault();
+                
+                var sender = $(':input[name=sender]').val();
+                var message = $(':input[name=msg]').val();
+                var url = 'http://localhost:3000/send?sender='+sender+"&msg="+message;
+                //console.log(url);
+                
+                $.get(url, function(data, status) {
+                    console.log(data, status);
+                });
+            });
+            
+            var ref = setInterval(function() {
+                var url = 'http://localhost:3000/recive?size=' + size;
+                
+                $.get(url, function(data, status) {
+                    if(status === 'success' && data !== "") {
+                        var msgList = data.msgList;
+                        
+                        for(var msg of msgList) {
+                           $('#textArea').append(`${msg.sender} : ${msg.message}<br/>`);
+                        }
+                        
+                        size = data.cnt;
+                    }
+                });
+            }, 500);
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
