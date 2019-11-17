@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>/public/carlist_vue.html</title>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="js/fetch.js"></script>
+    <script src="js/es6-promise.auto.min.js"></script>
+    <script>
+        $(function() {
+            vm.loadData(event);
+        });
+    </script>
+</head>
+
+<body>
+    <div id="example">
+     <h3>중고 자동차 목록 관리 프로그램</h3>
+      <div>
+          <input type="text" v-model="name" placeholder="name"/>
+          <input type="text" v-model="price"  placeholder="price"/>
+          <input type="text" v-model="company"  placeholder="company"/>
+          <input type="text" v-model="year"  placeholder="year"/>
+          <button v-on:click.stop="addData">추가하기</button>
+          <button v-on:click.stop="deleteData">삭제하기</button>
+      </div>
+       <div>
+            <button v-on:click.stop="loadData">불러오기</button>
+        </div>
+        <table border="1">
+           <tr>
+               <td colspan="6">{{msg}}</td>
+           </tr>
+            <tr v-for="car in carList">
+                <td><span v-if="car.mode">수정모드</span>{{car.name}}</td>
+                <td>{{car.price}}</td>
+                <td>{{car.company }}</td>
+                <td>{{car.year}}</td>
+                <td><button v-on:click.stop="removeData(car._id)">삭제</button></td>
+                <td><button v-on:click.stop="updateData(car._id)">수정하기</button></td>
+            </tr>
+        </table>
+    </div>
+    
+    <script>
+        var vm = new Vue({
+            el : '#example',
+            data : {
+                msg : "버튼을 누르세요!",
+                carList : [],
+                name : null,
+                price : 0,
+                company : null,
+                year : 0,
+                mode: false,
+            },
+            methods : {
+                loadData : function(e) {
+                    var obj = this;
+                    var url = 'http://localhost:3000/car/list';
+                    $.get(url, function(data, status) {
+                        if(status=='success'){
+                            obj.carList = data;
+                            obj.msg = "로딩완료";
+                            return;
+                        } else {
+                            this.msg = "로딩실패";
+                        }
+                    });
+//                    fetch(url).then(function(response) {
+//                        return response.json();
+//                    }).then(function(json) {
+//                        obj.msg = "로딩 완료!";
+//                    }).catch(function(ex) {
+//                        console.log('error', ex);
+//                        this.msg = "로딩 실패";
+//                    });
+                },
+                addData : function(e) {
+                    // this.carList.push({name:this.name, price:this.price, company:this.company, year:this.year});
+                    // 추가하고 서버에 정보를 보내준다.
+                    // 결과를 화면에 보여준다.
+                    var name = this.name;
+                    var price = this.price;
+                    var company = this.company;
+                    var year = this.year;
+                    var url = 'http://localhost:3000/car/insert/'+
+                        name+'/'+price+'/'+company+'/'+year;
+                    var obj = this;
+                    $.get(url, function(data, status) {
+                        if(status=='success') {
+                            obj.carList = data;
+                            obj.msg = "데이터 추가 성공";
+                            return;
+                        } else {
+                            this.msg = "데이터 추가 실패";
+                        }
+                    });
+                },
+                deleteData : function(e) {
+                    var name = this.name;
+                    var price = this.price;
+                    var company = this.company;
+                    var year = this.year;
+                    var url = 'http://localhost:3000/car/delete/'+
+                        name+'/'+price+'/'+company+'/'+year;
+                    var obj = this;
+                    $.get(url, function(data, status) {
+                        if(status=='success') {
+                            obj.carList = data;
+                            obj.msg = "데이터 삭제 성공";
+                            return;
+                        } else {
+                            this.msg = "데이터 삭제 실패";
+                        }
+                    });
+                },
+                removeData : function(_id) {
+                    var obj = this;
+                    var url = 'http://localhost:3000/car/remove/'+_id;
+
+                    fetch(url).then(function(response) {
+                        return response.json();
+                    }).then(function(json) {
+                        obj.msg = "삭제 완료!";
+                    }).catch(function(ex) {
+                        console.log('error', ex);
+                        this.msg = "삭제 실패";
+                    });
+                },
+                updateData : function(_id) {
+                    var obj = this;
+                    var url = 'http://localhost:3000/car/update/'+_id;
+                    
+                    var idx = this.carList.findIndex(function(item) {
+                        return item._id == _id;
+                    });
+                    
+                    //console.log(idx);
+                    
+                    this.carList[idx].mode = true;       
+                    
+                    fetch(url).then(function(response) {
+                        return response.json();
+                    }).then(function(json) {
+                        obj.msg = "삭제 완료!";
+                    }).catch(function(ex) {
+                        console.log('error', ex);
+                        this.msg = "삭제 실패";
+                    });
+                }
+            },
+        });
+    </script>
+</body></html>

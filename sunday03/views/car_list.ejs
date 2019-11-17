@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>/views/car_list.ejs</title>
+</head>
+<body>
+    <h3>자동차 목록 페이지</h3>
+    <%
+        // 터미널에서 보여짐
+//        console.log('car list >>>>');
+//        console.log(carlist);
+    %>
+    <table border="1">
+        <tr>
+            <th>이름</th>
+            <th>가격</th>
+            <th>회사</th>
+            <th>연식</th>
+        </tr>
+        <%
+            for(var car of carlist) {
+        %>
+        <tr>
+            <td><%=car.name%></td>
+            <td><%=car.price%></td>
+            <td><%=car.company%></td>
+            <td><%=car.year%></td>
+        </tr>
+        <%
+            }
+        %>
+    </table>
+</body>
+</html>
