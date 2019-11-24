@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>client_socket03.html</title>
+<!--    <script src="http://code.jquery.com/jquery-latest.min.js"></script>-->
+    <script src="js/jquery.js"></script>
+    <script src="js/socket.io.js"></script>
+    <script>
+        var host, port, socekt;
+        
+        function println(data) {
+            console.log(data);
+            $('#result').append("<br>" + data);
+        }
+        
+        function connectServer(){
+            var url = 'http://' + host + ':' + port;
+//            println(url);
+            socket = io.connect(url, {client_msg:'소켓준비완료'});
+            
+            socket.on('connect', function(){
+               println('소켓 서버에 connect 됨...' + url);
+                
+                socket.on('messgae', function(message) {
+                    console.log('server >>>', message);
+                    var msgStr = "수신 메세지 >>>"
+                    msgStr += message.sender + ": ";
+                    msgStr += message.data;
+                    println(msgStr);
+                });
+            });
+            
+            socket.on('disconnect', function() {
+                println('소켓 서버 연결 종료 됨...');
+            });
+        }
+        
+        $(document).ready(function() {
+            $('#connectButton').on("click", function(event) {
+                println('connectButton  클릭!');
+                host = $('#hostInput').val();
+                port = $('#portInput').val();
+                
+                connectServer();
+            });
+            
+            $('#loginButton').on('click', function(event) {
+                println('loginButton 클릭!');
+                var id = $('#idInput').val();
+                $('#senderInput').val(id);
+                
+                var output = {
+                    id: id,
+                    password: '12345',
+                };
+                console.log('서버로 보낼 데이터 >>>', JSON.stringify(output));
+                
+                if(socket === undefined) {
+                    alert('서버에 연결 안됨!!!');
+                    return;
+                }
+                
+                socket.emit('login', output);
+            });
+            
+            $('#sendBtn').on('click', function(evnet) {
+                var sender = $('#senderInput').val();
+                var recepient = $('#recepientInput').val();
+                var data = $('#dataInput').val();
+                
+                var output = {
+                    sender: sender,
+                    recepient : recepient,
+                    command : 'chat',
+                    type : 'text',
+                    data : data
+                };
+                
+                console.log('서버로 보낼 데이터 : ', JSON.stringify(output));
+                
+                if(socket === undefined) {
+                    println('서버에 연결되어 있지 않습니다. 먼저 서버 연결하세요!');
+                    return;
+                }
+                
+                socket.emit('message', output);
+            });
+        });
+    </script>
+        
+</head>
+<body>
+    <h1>채팅 클라이언트 01</h1>
+    <hr>
+    <div>
+        <input type="text" id="hostInput" value="localhost">
+        <input type="text" id="portInput" value="3000">    
+        <input type="button" id="connectButton" value="연결하기">
+    </div>
+    <hr>
+    <div>
+        <input type="text" id="idInput" value="test01">
+        <input type="button" id="loginButton" value="로그인버튼">
+    </div>
+    <hr>
+    <table>
+        <tr>
+            <th>보내는 사람 ID</th>
+            <td><input type="text" id="senderInput" value="test01"></td>
+        </tr>
+        <tr>
+            <th>받는 사람 ID</th>
+            <td><input type="text" id="recepientInput" value="test02"></td>
+        </tr>
+        <tr>
+            <th>메세지 데이터</th>
+            <td><input type="text" id="dataInput" value="행복합시다!"></td>
+        </tr>
+        <tr>
+            <th colspan="2" align="right">
+                <input type="button" id="sendBtn" value="전송">
+            </th>
+        </tr>
+    </table>        
+    <hr>
+    <div id="result">결과: </div>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!---- client.html (source) ---->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>client_socket02.html</title>
+    <script src="js/socket.io.js"></script>
+    <script>
+        var chat = io.connect('http://localhost:3000/chat');
+        var news = io.connect('http://localhost:3000/news');
+        
+        chat.on('connect', function() {
+            chat.emit('hi',"hihi~"); 
+        });
+        
+        news.on('connect', function() {
+            news.emit('woot');
+        });
+        
+        chat.on('a message', function(msg) {
+            console.log('chat msg:', msg);
+        });
+        
+        news.on('item', function(msg) {
+            console.log('news msg:', msg);
+        });
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
